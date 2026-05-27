@@ -78,9 +78,28 @@
             position: sticky; top: 8px; z-index: 100; flex-wrap: wrap;
         }
         .menu-toggle { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--text-dark); padding: 6px; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .search-box { display: flex; align-items: center; background: var(--bg); border-radius: 20px; padding: 8px 14px; gap: 6px; flex: 1; min-width: 0; border: 2px solid transparent; transition: var(--transition); }
+        
+        /* Global Search */
+        .search-wrapper { position: relative; flex: 1; min-width: 0; }
+        .search-box { display: flex; align-items: center; background: var(--bg); border-radius: 20px; padding: 8px 14px; gap: 6px; border: 2px solid transparent; transition: var(--transition); }
         .search-box:focus-within { border-color: var(--primary); }
         .search-box input { border: none; background: none; outline: none; width: 100%; min-width: 0; color: var(--text-dark); font-size: 0.85rem; }
+        .search-dropdown {
+            display: none; position: absolute; top: 100%; left: 0; right: 0;
+            background: var(--bg-white); border: 2px solid var(--border); border-radius: var(--radius-sm);
+            max-height: 250px; overflow-y: auto; z-index: 200; box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            margin-top: 4px;
+        }
+        .search-dropdown.show { display: block; }
+        .search-result-item {
+            padding: 10px 14px; cursor: pointer; font-size: 0.82rem; display: flex;
+            align-items: center; gap: 8px; border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+        }
+        .search-result-item:hover, .search-result-item:active { background: var(--accent); }
+        .search-result-item i { color: var(--primary); width: 18px; text-align: center; }
+        .search-result-item .badge-result { font-size: 0.65rem; color: var(--text-light); margin-left: auto; }
+
         .topbar-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
         .icon-btn { background: var(--bg); border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 1rem; color: var(--text-dark); transition: var(--transition); display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
         .icon-btn:hover { background: var(--primary); color: white; }
@@ -124,43 +143,34 @@
         .status-inactive, .status-cancelled { background: #f8d7da; color: #721c24; }
         .status-completed { background: #d1ecf1; color: #0c5460; }
 
-        /* ============ ENHANCED MOBILE MODALS ============ */
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 2000; align-items: flex-end; justify-content: center;
+        /* Enhanced Filter Bar */
+        .filter-bar {
+            display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; align-items: center;
+            padding: 8px; background: var(--bg); border-radius: var(--radius-sm);
         }
-        .modal.show { display: flex; }
-        .modal-content {
-            background: var(--bg-white); border-radius: 20px 20px 0 0; padding: 20px 16px;
-            width: 100%; max-height: 92vh; max-height: 92dvh; overflow-y: auto;
-            box-shadow: 0 -5px 30px rgba(0,0,0,0.25); animation: slideUp 0.3s ease;
+        .filter-bar input, .filter-bar select {
+            padding: 8px 10px; border: 2px solid var(--border); border-radius: 16px;
+            background: var(--bg-white); color: var(--text-dark); font-size: 0.75rem;
+            flex: 1; min-width: 80px;
         }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .modal-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid var(--border);
-            position: sticky; top: -20px; background: var(--bg-white); z-index: 1;
-        }
-        .modal-header h3 { font-size: 1.1rem; font-weight: 700; }
-        .close-btn {
-            background: none; border: none; font-size: 1.6rem; cursor: pointer; color: var(--text-light);
-            width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; transition: var(--transition);
-        }
-        .close-btn:active { background: var(--danger); color: white; }
-        .modal-footer {
-            display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;
-            padding-top: 12px; border-top: 2px solid var(--border); position: sticky;
-            bottom: -20px; background: var(--bg-white);
-        }
-        .modal-footer .btn { padding: 10px 20px; font-size: 0.85rem; border-radius: 25px; }
+        .filter-bar .date-range { display: flex; gap: 4px; align-items: center; flex: 2; min-width: 150px; }
+        .filter-bar .date-range input { flex: 1; min-width: 0; }
+        .filter-bar .date-range span { font-size: 0.7rem; color: var(--text-light); flex-shrink: 0; }
+        .search-highlight { background: #ffeaa7; padding: 1px 3px; border-radius: 2px; }
 
-        /* Multi-select */
+        /* Modals */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: flex-end; justify-content: center; }
+        .modal.show { display: flex; }
+        .modal-content { background: var(--bg-white); border-radius: 20px 20px 0 0; padding: 20px 16px; width: 100%; max-height: 92vh; max-height: 92dvh; overflow-y: auto; box-shadow: 0 -5px 30px rgba(0,0,0,0.25); animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid var(--border); position: sticky; top: -20px; background: var(--bg-white); z-index: 1; }
+        .modal-header h3 { font-size: 1.1rem; font-weight: 700; }
+        .close-btn { background: none; border: none; font-size: 1.6rem; cursor: pointer; color: var(--text-light); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+        .close-btn:active { background: var(--danger); color: white; }
+        .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; padding-top: 12px; border-top: 2px solid var(--border); position: sticky; bottom: -20px; background: var(--bg-white); }
+        .modal-footer .btn { padding: 10px 20px; font-size: 0.85rem; border-radius: 25px; }
         .multi-select-container { position: relative; }
-        .multi-select-tags {
-            display: flex; flex-wrap: wrap; gap: 5px; padding: 10px; border: 2px solid var(--border);
-            border-radius: var(--radius-sm); background: var(--bg); min-height: 44px; cursor: pointer; align-items: center;
-        }
+        .multi-select-tags { display: flex; flex-wrap: wrap; gap: 5px; padding: 10px; border: 2px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); min-height: 44px; cursor: pointer; align-items: center; }
         .tag { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; background: var(--primary); color: white; border-radius: 16px; font-size: 0.78rem; animation: tagIn 0.2s ease; }
         @keyframes tagIn { from { transform: scale(0); } to { transform: scale(1); } }
         .tag-remove { cursor: pointer; width: 16px; height: 16px; border-radius: 50%; background: rgba(255,255,255,0.3); display: inline-flex; align-items: center; justify-content: center; font-size: 0.6rem; }
@@ -181,8 +191,6 @@
         .billing-summary-box { background: var(--accent); padding: 10px; border-radius: var(--radius-sm); margin: 10px 0; font-size: 0.82rem; }
         .billing-summary-box .sum-row { display: flex; justify-content: space-between; padding: 3px 0; }
         .billing-summary-box .sum-total { font-weight: 700; border-top: 2px solid var(--border); margin-top: 5px; padding-top: 5px; font-size: 0.9rem; }
-        .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; align-items: center; }
-        .filter-bar select, .filter-bar input { padding: 7px 10px; border: 2px solid var(--border); border-radius: 16px; background: var(--bg-white); color: var(--text-dark); font-size: 0.78rem; flex: 1; min-width: 80px; }
         .chart-container { background: var(--bg-white); padding: 14px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 12px; width: 100%; }
         .chart-container canvas { max-height: 200px; width: 100% !important; }
         .toast-container { position: fixed; top: 8px; left: 8px; right: 8px; z-index: 3000; display: flex; flex-direction: column; gap: 6px; }
@@ -206,12 +214,7 @@
         .color-picker { display: flex; gap: 8px; flex-wrap: wrap; }
         .color-option { width: 34px; height: 34px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: var(--transition); }
         .color-option:hover, .color-option.selected { border-color: var(--text-dark); transform: scale(1.1); }
-        .image-upload { border: 2px dashed var(--border); border-radius: var(--radius-sm); padding: 16px; text-align: center; cursor: pointer; transition: var(--transition); }
-        .image-upload:active { border-color: var(--primary); background: var(--accent); }
-        .progress-bar { width: 100%; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 4px 0; }
-        .progress-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
 
-        /* Desktop */
         @media (min-width: 769px) {
             .sidebar { transform: translateX(0); position: fixed; }
             .main-content { margin-left: 260px; padding: 16px 20px; padding-bottom: 20px; }
@@ -227,6 +230,7 @@
             th { font-size: 0.7rem; }
             td { font-size: 0.82rem; }
             .chart-container canvas { max-height: 250px; }
+            .filter-bar input, .filter-bar select { font-size: 0.8rem; }
         }
         @media (min-width: 769px) and (max-width: 1024px) {
             .sidebar { width: 220px; }
@@ -259,7 +263,13 @@
         <main class="main-content" id="mainContent">
             <div class="topbar">
                 <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
-                <div class="search-box"><i class="fas fa-search"></i><input type="text" placeholder="Search..." id="globalSearch"></div>
+                <div class="search-wrapper">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search anything... (e.g., bill, customer name, invoice)" id="globalSearch" oninput="handleGlobalSearch(this.value)" onfocus="handleGlobalSearch(this.value)">
+                    </div>
+                    <div class="search-dropdown" id="searchDropdown"></div>
+                </div>
                 <div class="topbar-actions">
                     <button class="icon-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
                     <button class="icon-btn"><i class="fas fa-bell"></i><span class="badge">3</span></button>
@@ -282,55 +292,93 @@
                 <!-- CUSTOMERS -->
                 <div class="page" id="customers">
                     <div class="card-header"><h2>👥 Customers</h2><button class="btn btn-primary btn-sm" onclick="openCustomerModal()"><i class="fas fa-plus"></i> Add</button></div>
-                    <div class="filter-bar"><input type="text" placeholder="Search..." id="customerSearch" oninput="renderCustomers()"><select id="customerFilter" onchange="renderCustomers()"><option value="all">All</option><option value="active">Active</option></select></div>
-                    <div class="card"><div class="table-responsive"><table><thead><tr><th>Name</th><th>Mobile</th><th>Email</th><th>Membership</th><th>Act</th></tr></thead><tbody id="customersTable"></tbody></table></div></div>
+                    <div class="filter-bar">
+                        <input type="text" placeholder="🔍 Name/Email/Mobile" id="customerSearch" oninput="renderCustomers()">
+                        <select id="customerFilter" onchange="renderCustomers()"><option value="all">All Status</option><option value="active">Active</option><option value="inactive">Inactive</option></select>
+                        <select id="customerMembershipFilter" onchange="renderCustomers()"><option value="all">All Plans</option><option value="Silver">Silver</option><option value="Gold">Gold</option><option value="Platinum">Platinum</option></select>
+                    </div>
+                    <div class="card"><div class="table-responsive"><table><thead><tr><th>Name</th><th>Mobile</th><th>Email</th><th>Membership</th><th>Points</th><th>Act</th></tr></thead><tbody id="customersTable"></tbody></table></div></div>
                 </div>
                 <!-- APPOINTMENTS -->
                 <div class="page" id="appointments">
                     <div class="card-header"><h2>📅 Appointments</h2><button class="btn btn-primary btn-sm" onclick="openAppointmentModal()"><i class="fas fa-plus"></i> Book</button></div>
-                    <div class="filter-bar"><input type="text" placeholder="Search..." id="appointmentSearch" oninput="renderAppointments()"><select id="appointmentFilter" onchange="renderAppointments()"><option value="all">All</option><option value="Confirmed">Confirmed</option><option value="Pending">Pending</option></select></div>
+                    <div class="filter-bar">
+                        <input type="text" placeholder="🔍 Customer/Service" id="appointmentSearch" oninput="renderAppointments()">
+                        <select id="appointmentFilter" onchange="renderAppointments()"><option value="all">All Status</option><option value="Confirmed">Confirmed</option><option value="Pending">Pending</option><option value="Completed">Completed</option></select>
+                        <div class="date-range"><input type="date" id="apptDateFrom" onchange="renderAppointments()" title="From"><span>-</span><input type="date" id="apptDateTo" onchange="renderAppointments()" title="To"></div>
+                    </div>
                     <div class="card"><div class="table-responsive"><table><thead><tr><th>Customer</th><th>Services</th><th>Staff</th><th>Date</th><th>Status</th><th>Act</th></tr></thead><tbody id="appointmentsTable"></tbody></table></div></div>
                 </div>
                 <!-- STAFF -->
                 <div class="page" id="staff">
                     <div class="card-header"><h2>💼 Staff</h2><button class="btn btn-primary btn-sm" onclick="openStaffModal()"><i class="fas fa-plus"></i> Add</button></div>
+                    <div class="filter-bar">
+                        <input type="text" placeholder="🔍 Name/Role/Mobile" id="staffSearch" oninput="renderStaff()">
+                        <select id="staffFilter" onchange="renderStaff()"><option value="all">All</option><option value="active">Active</option><option value="inactive">Inactive</option></select>
+                    </div>
                     <div class="card"><div class="table-responsive"><table><thead><tr><th>Name</th><th>Role</th><th>Mobile</th><th>Rating</th><th>Act</th></tr></thead><tbody id="staffTable"></tbody></table></div></div>
                 </div>
                 <!-- SERVICES -->
                 <div class="page" id="services">
                     <div class="card-header"><h2>💇 Services</h2><button class="btn btn-primary btn-sm" onclick="openServiceModal()"><i class="fas fa-plus"></i> Add</button></div>
-                    <div class="card"><div class="table-responsive"><table><thead><tr><th>Service</th><th>Category</th><th>Price</th><th>Duration</th><th>Act</th></tr></thead><tbody id="servicesTable"></tbody></table></div></div>
+                    <div class="filter-bar">
+                        <input type="text" placeholder="🔍 Name/Category" id="serviceSearch" oninput="renderServices()">
+                        <select id="serviceCatFilter" onchange="renderServices()"><option value="all">All Categories</option><option>Hair</option><option>Skin Care</option><option>Nails</option><option>Massage</option></select>
+                    </div>
+                    <div class="card"><div class="table-responsive"><table><thead><tr><th>Service</th><th>Category</th><th>Price</th><th>Duration</th><th>GST</th><th>Act</th></tr></thead><tbody id="servicesTable"></tbody></table></div></div>
                 </div>
                 <!-- BILLING -->
                 <div class="page" id="billing">
                     <div class="card-header"><h2>💰 Billing</h2><button class="btn btn-primary btn-sm" onclick="openBillingModal()"><i class="fas fa-plus"></i> Invoice</button></div>
-                    <div class="card"><div class="table-responsive"><table><thead><tr><th>Invoice</th><th>Customer</th><th>Services</th><th>Total</th><th>Payment</th><th>Act</th></tr></thead><tbody id="billingTable"></tbody></table></div></div>
+                    <div class="filter-bar">
+                        <input type="text" placeholder="🔍 Invoice/Customer" id="billingSearch" oninput="renderBilling()">
+                        <select id="billingPaymentFilter" onchange="renderBilling()"><option value="all">All Payment</option><option value="Paid">Paid</option><option value="Pending">Pending</option></select>
+                        <div class="date-range"><input type="date" id="billDateFrom" onchange="renderBilling()" title="From"><span>-</span><input type="date" id="billDateTo" onchange="renderBilling()" title="To"></div>
+                    </div>
+                    <div class="card"><div class="table-responsive"><table><thead><tr><th>Invoice</th><th>Customer</th><th>Services</th><th>Total</th><th>Payment</th><th>Date</th><th>Act</th></tr></thead><tbody id="billingTable"></tbody></table></div></div>
                 </div>
                 <!-- INVENTORY -->
                 <div class="page" id="inventory">
                     <div class="card-header"><h2>📦 Inventory</h2><button class="btn btn-primary btn-sm" onclick="openInventoryModal()"><i class="fas fa-plus"></i> Add</button></div>
+                    <div class="filter-bar">
+                        <input type="text" placeholder="🔍 Product Name" id="inventorySearch" oninput="renderInventory()">
+                        <select id="inventoryStockFilter" onchange="renderInventory()"><option value="all">All Stock</option><option value="In Stock">In Stock</option><option value="Low Stock">Low Stock</option></select>
+                    </div>
                     <div class="card"><div class="table-responsive"><table><thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Status</th><th>Act</th></tr></thead><tbody id="inventoryTable"></tbody></table></div></div>
                 </div>
                 <!-- MARKETING -->
                 <div class="page" id="marketing">
                     <div class="card-header"><h2>📢 Marketing</h2><button class="btn btn-primary btn-sm" onclick="openMarketingModal()"><i class="fas fa-plus"></i> Campaign</button></div>
+                    <div class="filter-bar">
+                        <input type="text" placeholder="🔍 Campaign/Coupon" id="marketingSearch" oninput="renderMarketing()">
+                        <select id="marketingTypeFilter" onchange="renderMarketing()"><option value="all">All Types</option><option>SMS</option><option>Email</option></select>
+                    </div>
                     <div class="card"><div class="table-responsive"><table><thead><tr><th>Campaign</th><th>Type</th><th>Coupon</th><th>Discount</th><th>Act</th></tr></thead><tbody id="marketingTable"></tbody></table></div></div>
                 </div>
                 <!-- MEMBERSHIP -->
                 <div class="page" id="membership">
                     <div class="card-header"><h2>👑 Membership</h2><button class="btn btn-primary btn-sm" onclick="openMembershipModal()"><i class="fas fa-plus"></i> Plan</button></div>
+                    <div class="filter-bar">
+                        <input type="text" placeholder="🔍 Plan Name" id="membershipSearch" oninput="renderMembership()">
+                    </div>
                     <div class="card"><div class="table-responsive"><table><thead><tr><th>Plan</th><th>Price</th><th>Discount</th><th>Points</th><th>Act</th></tr></thead><tbody id="membershipTable"></tbody></table></div></div>
                 </div>
                 <!-- REPORTS -->
                 <div class="page" id="reports">
-                    <h2 style="font-size:1rem;margin-bottom:10px;">📊 Reports</h2>
+                    <h2 style="font-size:1rem;margin-bottom:10px;">📊 Reports & Analytics</h2>
                     <div class="stats-grid">
                         <div class="stat-card"><div class="stat-icon"><i class="fas fa-dollar-sign"></i></div><div class="stat-value" id="reportTotalRevenue">$0</div><div class="stat-label">Revenue</div></div>
                         <div class="stat-card"><div class="stat-icon"><i class="fas fa-calendar-check"></i></div><div class="stat-value" id="reportTotalBookings">0</div><div class="stat-label">Bookings</div></div>
                         <div class="stat-card"><div class="stat-icon"><i class="fas fa-percentage"></i></div><div class="stat-value" id="reportAvgTicket">$0</div><div class="stat-label">Avg Ticket</div></div>
                         <div class="stat-card"><div class="stat-icon"><i class="fas fa-star"></i></div><div class="stat-value" id="reportTopService">-</div><div class="stat-label">Top Service</div></div>
                     </div>
-                    <div class="card"><div class="filter-bar"><select id="reportPeriod" onchange="updateReports()"><option value="30">30 Days</option><option value="90">90 Days</option><option value="365">Year</option></select><button class="btn btn-primary btn-sm" onclick="updateReports()"><i class="fas fa-sync-alt"></i> Refresh</button></div></div>
+                    <div class="card">
+                        <div class="filter-bar" style="margin-bottom:8px;">
+                            <select id="reportPeriod" onchange="updateReports()"><option value="7">Last 7 Days</option><option value="30" selected>Last 30 Days</option><option value="90">Last 90 Days</option><option value="365">Last Year</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select>
+                            <div class="date-range"><input type="date" id="reportStartDate" onchange="updateReports()"><span>-</span><input type="date" id="reportEndDate" onchange="updateReports()"></div>
+                            <button class="btn btn-primary btn-sm" onclick="updateReports()"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                    </div>
                     <div class="chart-container"><h3 style="font-size:0.9rem;">💰 Revenue</h3><canvas id="revenueTrendChart"></canvas></div>
                     <div class="chart-container"><h3 style="font-size:0.9rem;">📅 Bookings</h3><canvas id="bookingTrendChart"></canvas></div>
                     <div class="chart-container"><h3 style="font-size:0.9rem;">💇 Services</h3><canvas id="serviceDistChart"></canvas></div>
@@ -349,25 +397,12 @@
                         <button class="tab-btn" data-tab="security">Security</button>
                         <button class="tab-btn" data-tab="backup">Backup</button>
                     </div>
-                    <div class="tab-content active" id="tab-general">
-                        <div class="card"><h3 style="font-size:0.9rem;">🏢 Salon Info</h3><form onsubmit="event.preventDefault();showToast('Saved!','success')"><div class="form-group"><label>Salon Name</label><input class="form-control" value="SalonPro"></div><div class="form-group"><label>Email</label><input class="form-control" type="email" value="info@salonpro.com"></div><div class="form-group"><label>Mobile</label><input class="form-control" value="+1 555-0123"></div><div class="form-group"><label>GST Number</label><input class="form-control" value="GST123456"></div><button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-save"></i> Save</button></form></div>
-                    </div>
-                    <div class="tab-content" id="tab-business">
-                        <div class="card"><h3 style="font-size:0.9rem;">🕐 Hours</h3><form id="businessHoursForm"><div id="businessHoursContainer"></div><button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-save"></i> Save</button></form></div>
-                        <div class="card"><h3 style="font-size:0.9rem;">💰 Tax</h3><div class="form-group"><label>Default GST (%)</label><input class="form-control" type="number" value="18"></div><button class="btn btn-primary btn-sm" onclick="showToast('Saved!','success')"><i class="fas fa-save"></i> Save</button></div>
-                    </div>
-                    <div class="tab-content" id="tab-appearance">
-                        <div class="card"><h3 style="font-size:0.9rem;">🎨 Theme</h3><div class="form-group"><label>Mode</label><select class="form-control" onchange="changeTheme(this.value)"><option value="light">Light</option><option value="dark">Dark</option></select></div><div class="form-group"><label>Color</label><div class="color-picker"><div class="color-option" style="background:#c9956b;" onclick="selectColor('#c9956b',this)"></div><div class="color-option" style="background:#9b59b6;" onclick="selectColor('#9b59b6',this)"></div><div class="color-option" style="background:#e74c3c;" onclick="selectColor('#e74c3c',this)"></div><div class="color-option" style="background:#3498db;" onclick="selectColor('#3498db',this)"></div><div class="color-option" style="background:#2ecc71;" onclick="selectColor('#2ecc71',this)"></div></div></div></div>
-                    </div>
-                    <div class="tab-content" id="tab-notifications">
-                        <div class="card"><h3 style="font-size:0.9rem;">🔔 Preferences</h3><div class="gst-toggle-row"><span>Email</span><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div><div class="gst-toggle-row"><span>SMS</span><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div><div class="gst-toggle-row"><span>Reminders</span><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div></div>
-                    </div>
-                    <div class="tab-content" id="tab-security">
-                        <div class="card"><h3 style="font-size:0.9rem;">🔒 Password</h3><form onsubmit="event.preventDefault();showToast('Changed!','success')"><div class="form-group"><label>Current</label><input class="form-control" type="password"></div><div class="form-group"><label>New</label><input class="form-control" type="password"></div><button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-key"></i> Update</button></form></div>
-                    </div>
-                    <div class="tab-content" id="tab-backup">
-                        <div class="card"><h3 style="font-size:0.9rem;">💾 Backup</h3><div style="display:flex;gap:6px;flex-wrap:wrap;"><button class="btn btn-primary btn-sm" onclick="exportData()"><i class="fas fa-download"></i> Export</button><button class="btn btn-info btn-sm" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> Import</button><input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)"><button class="btn btn-warning btn-sm" onclick="resetData()"><i class="fas fa-undo"></i> Reset</button></div></div>
-                    </div>
+                    <div class="tab-content active" id="tab-general"><div class="card"><h3 style="font-size:0.9rem;">🏢 Salon Info</h3><form onsubmit="event.preventDefault();showToast('Saved!','success')"><div class="form-group"><label>Salon Name</label><input class="form-control" value="SalonPro"></div><div class="form-group"><label>Email</label><input class="form-control" type="email" value="info@salonpro.com"></div><div class="form-group"><label>Mobile</label><input class="form-control" value="+1 555-0123"></div><div class="form-group"><label>GST Number</label><input class="form-control" value="GST123456"></div><button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-save"></i> Save</button></form></div></div>
+                    <div class="tab-content" id="tab-business"><div class="card"><h3 style="font-size:0.9rem;">🕐 Hours</h3><form id="businessHoursForm"><div id="businessHoursContainer"></div><button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-save"></i> Save</button></form></div></div>
+                    <div class="tab-content" id="tab-appearance"><div class="card"><h3 style="font-size:0.9rem;">🎨 Theme</h3><div class="form-group"><label>Mode</label><select class="form-control" onchange="changeTheme(this.value)"><option value="light">Light</option><option value="dark">Dark</option></select></div><div class="form-group"><label>Color</label><div class="color-picker"><div class="color-option" style="background:#c9956b;" onclick="selectColor('#c9956b',this)"></div><div class="color-option" style="background:#9b59b6;" onclick="selectColor('#9b59b6',this)"></div><div class="color-option" style="background:#e74c3c;" onclick="selectColor('#e74c3c',this)"></div><div class="color-option" style="background:#3498db;" onclick="selectColor('#3498db',this)"></div><div class="color-option" style="background:#2ecc71;" onclick="selectColor('#2ecc71',this)"></div></div></div></div></div>
+                    <div class="tab-content" id="tab-notifications"><div class="card"><div class="gst-toggle-row"><span>Email</span><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div><div class="gst-toggle-row"><span>SMS</span><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div></div></div>
+                    <div class="tab-content" id="tab-security"><div class="card"><h3 style="font-size:0.9rem;">🔒 Password</h3><form onsubmit="event.preventDefault();showToast('Changed!','success')"><div class="form-group"><label>Current</label><input class="form-control" type="password"></div><div class="form-group"><label>New</label><input class="form-control" type="password"></div><button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-key"></i> Update</button></form></div></div>
+                    <div class="tab-content" id="tab-backup"><div class="card"><h3 style="font-size:0.9rem;">💾 Backup</h3><div style="display:flex;gap:6px;flex-wrap:wrap;"><button class="btn btn-primary btn-sm" onclick="exportData()"><i class="fas fa-download"></i> Export</button><button class="btn btn-info btn-sm" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> Import</button><input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)"><button class="btn btn-warning btn-sm" onclick="resetData()"><i class="fas fa-undo"></i> Reset</button></div></div></div>
                 </div>
                 <!-- CHAT -->
                 <div class="page" id="chat"><h2 style="font-size:1rem;">💬 Chat</h2><div class="card" style="height:380px;display:flex;flex-direction:column;"><div id="chatMessages" style="flex:1;overflow-y:auto;padding:8px;"><div style="background:var(--accent);padding:10px 12px;border-radius:14px;margin:4px 0;max-width:80%;"><strong>Support</strong><p>Hello! How can we help?</p></div></div><div style="display:flex;gap:6px;padding:8px;border-top:2px solid var(--border);"><input type="text" id="chatInput" class="form-control" placeholder="Type..." style="flex:1" onkeypress="if(event.key==='Enter')sendMessage()"><button class="btn btn-primary btn-sm" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button></div></div></div>
@@ -375,47 +410,31 @@
         </main>
     </div>
 
-    <!-- ============ ENHANCED MODALS ============ -->
-    <!-- Customer Modal -->
+    <!-- MODALS (same as before) -->
     <div class="modal" id="customerModal"><div class="modal-content"><div class="modal-header"><h3 id="customerModalTitle">Add Customer</h3><button class="close-btn" onclick="closeModal('customerModal')">&times;</button></div><form id="customerForm"><input type="hidden" name="editId"><div class="form-group"><label>Full Name *</label><input class="form-control" name="fullName" required placeholder="Enter full name"></div><div class="form-group"><label>Mobile *</label><input class="form-control" name="mobile" required placeholder="Enter mobile number"></div><div class="form-group"><label>Email</label><input class="form-control" name="email" type="email" placeholder="Enter email address"></div><div class="form-group"><label>Membership</label><select class="form-control" name="membership"><option>None</option><option>Silver</option><option>Gold</option><option>Platinum</option></select></div><div class="form-group"><label>Loyalty Points</label><input class="form-control" name="loyaltyPoints" type="number" value="0"></div><div class="modal-footer"><button type="button" class="btn btn-danger" onclick="closeModal('customerModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Customer</button></div></form></div></div>
-
-    <!-- Appointment Modal -->
-    <div class="modal" id="appointmentModal"><div class="modal-content"><div class="modal-header"><h3 id="appointmentModalTitle">New Booking</h3><button class="close-btn" onclick="closeModal('appointmentModal')">&times;</button></div><form id="appointmentForm"><input type="hidden" name="editId"><div class="form-group"><label>Customer *</label><select class="form-control" name="customerName" required id="apptCustomerSelect"></select></div><div class="form-group"><label>Services * (tap to select multiple)</label><div class="multi-select-container"><div class="multi-select-tags" id="apptServicesTags" onclick="toggleDropdown('apptServicesDropdown')"><span style="color:var(--text-light);" id="apptServicesPH">Tap here to select services...</span></div><div class="multi-select-dropdown" id="apptServicesDropdown"></div></div></div><div class="form-group"><label>Staff * (tap to select multiple)</label><div class="multi-select-container"><div class="multi-select-tags" id="apptStaffTags" onclick="toggleDropdown('apptStaffDropdown')"><span style="color:var(--text-light);" id="apptStaffPH">Tap here to select staff...</span></div><div class="multi-select-dropdown" id="apptStaffDropdown"></div></div></div><div class="form-group"><label>Date *</label><input class="form-control" name="appointmentDate" type="date" required></div><div class="form-group"><label>Time *</label><input class="form-control" name="time" type="time" required></div><div class="modal-footer"><button type="button" class="btn btn-danger" onclick="closeModal('appointmentModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-calendar-check"></i> Book Appointment</button></div></form></div></div>
-
-    <!-- Billing Modal -->
-    <div class="modal" id="billingModal"><div class="modal-content"><div class="modal-header"><h3 id="billingModalTitle">Generate Invoice</h3><button class="close-btn" onclick="closeModal('billingModal')">&times;</button></div><form id="billingForm"><input type="hidden" name="editId"><div class="form-group"><label>Customer *</label><select class="form-control" name="customerName" required id="billingCustomerSelect"></select></div><div class="form-group"><label>Services * (tap to select with prices)</label><div class="multi-select-container"><div class="multi-select-tags" id="billingServicesTags" onclick="toggleDropdown('billingServicesDropdown')"><span style="color:var(--text-light);" id="billingServicesPH">Tap here to select services...</span></div><div class="multi-select-dropdown" id="billingServicesDropdown"></div></div></div><div class="billing-summary-box" id="selectedServicesBox" style="display:none;"><strong style="display:block;margin-bottom:6px;">📋 Selected Services:</strong><div id="selectedServicesList"></div><div class="sum-row sum-total"><span>Subtotal:</span><span id="billingSubtotalSpan">$0</span></div></div><div class="gst-toggle-row"><span>Apply GST</span><div class="toggle-switch on" id="gstToggleSwitch" onclick="toggleGST()"></div></div><div class="gst-details show" id="gstDetails"><div class="form-group"><label>GST Type</label><select class="form-control" id="gstTypeSelect" onchange="calcBilling()"><option value="overall">Overall GST (on total)</option><option value="perService">Per Service GST</option></select></div><div class="form-group"><label>GST Rate (%)</label><input class="form-control" type="number" id="overallGstRate" value="18" oninput="calcBilling()"></div></div><div class="form-group"><label>Discount ($)</label><input class="form-control" type="number" id="billingDiscountAmt" value="0" oninput="calcBilling()" placeholder="Enter discount amount"></div><div class="billing-summary-box"><strong style="display:block;margin-bottom:6px;">🧾 Invoice Summary:</strong><div class="sum-row"><span>Subtotal:</span><span id="calcSubtotal">$0.00</span></div><div class="sum-row"><span>GST:</span><span id="calcGst">$0.00</span></div><div class="sum-row"><span>Discount:</span><span id="calcDiscount">$0.00</span></div><div class="sum-row sum-total"><span>Final Amount:</span><span id="calcFinal">$0.00</span></div></div><div class="form-group"><label>Payment Method</label><select class="form-control" name="paymentMethod"><option>Cash</option><option>Credit Card</option><option>Debit Card</option><option>UPI</option></select></div><div class="modal-footer"><button type="button" class="btn btn-danger" onclick="closeModal('billingModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-file-invoice"></i> Generate Invoice</button></div></form></div></div>
-
-    <!-- Staff Modal -->
-    <div class="modal" id="staffModal"><div class="modal-content"><div class="modal-header"><h3>Add Staff</h3><button class="close-btn" onclick="closeModal('staffModal')">&times;</button></div><form id="staffForm"><input type="hidden" name="editId"><div class="form-group"><label>Name *</label><input class="form-control" name="name" required placeholder="Enter staff name"></div><div class="form-group"><label>Role *</label><input class="form-control" name="role" required placeholder="e.g., Senior Stylist"></div><div class="form-group"><label>Mobile</label><input class="form-control" name="mobile" placeholder="Enter mobile number"></div><div class="form-group"><label>Rating (0-5)</label><input class="form-control" name="rating" type="number" step="0.1" min="0" max="5" value="5"></div><div class="modal-footer"><button type="button" class="btn btn-danger" onclick="closeModal('staffModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Staff</button></div></form></div></div>
-
-    <!-- Service Modal -->
-    <div class="modal" id="serviceModal"><div class="modal-content"><div class="modal-header"><h3>Add Service</h3><button class="close-btn" onclick="closeModal('serviceModal')">&times;</button></div><form id="serviceForm"><input type="hidden" name="editId"><div class="form-group"><label>Service Name *</label><input class="form-control" name="serviceName" required placeholder="e.g., Haircut & Style"></div><div class="form-group"><label>Category</label><select class="form-control" name="category"><option>Hair</option><option>Skin Care</option><option>Nails</option><option>Massage</option></select></div><div class="form-group"><label>Price ($) *</label><input class="form-control" name="price" type="number" required placeholder="Enter price"></div><div class="form-group"><label>Duration (mins)</label><input class="form-control" name="duration" type="number" value="60"></div><div class="form-group"><label>GST Rate (%)</label><input class="form-control" name="gstRate" type="number" value="18"></div><div class="modal-footer"><button type="button" class="btn btn-danger" onclick="closeModal('serviceModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Service</button></div></form></div></div>
-
-    <!-- Inventory Modal -->
-    <div class="modal" id="inventoryModal"><div class="modal-content"><div class="modal-header"><h3>Add Product</h3><button class="close-btn" onclick="closeModal('inventoryModal')">&times;</button></div><form id="inventoryForm"><input type="hidden" name="editId"><div class="form-group"><label>Product Name *</label><input class="form-control" name="productName" required placeholder="Enter product name"></div><div class="form-group"><label>Quantity *</label><input class="form-control" name="quantity" type="number" required placeholder="Enter quantity"></div><div class="form-group"><label>Selling Price ($)</label><input class="form-control" name="sellingPrice" type="number" placeholder="Enter selling price"></div><div class="modal-footer"><button type="button" class="btn btn-danger" onclick="closeModal('inventoryModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Product</button></div></form></div></div>
-
-    <!-- Marketing Modal -->
-    <div class="modal" id="marketingModal"><div class="modal-content"><div class="modal-header"><h3>Create Campaign</h3><button class="close-btn" onclick="closeModal('marketingModal')">&times;</button></div><form id="marketingForm"><input type="hidden" name="editId"><div class="form-group"><label>Campaign Name *</label><input class="form-control" name="campaignName" required placeholder="e.g., Holiday Special"></div><div class="form-group"><label>Type</label><select class="form-control" name="campaignType"><option>SMS</option><option>Email</option></select></div><div class="form-group"><label>Coupon Code</label><input class="form-control" name="couponCode" placeholder="e.g., SAVE20"></div><div class="form-group"><label>Discount (%)</label><input class="form-control" name="discountValue" type="number" placeholder="Enter discount percentage"></div><div class="modal-footer"><button type="button" class="btn btn-danger" onclick="closeModal('marketingModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-bullhorn"></i> Create Campaign</button></div></form></div></div>
-
-    <!-- Membership Modal -->
-    <div class="modal" id="membershipModal"><div class="modal-content"><div class="modal-header"><h3>Add Plan</h3><button class="close-btn" onclick="closeModal('membershipModal')">&times;</button></div><form id="membershipForm"><input type="hidden" name="editId"><div class="form-group"><label>Plan Name *</label><input class="form-control" name="planName" required placeholder="e.g., Gold Plan"></div><div class="form-group"><label>Price ($) *</label><input class="form-control" name="price" type="number" required placeholder="Enter monthly price"></div><div class="form-group"><label>Discount (%)</label><input class="form-control" name="discountPercentage" type="number" value="0" placeholder="Enter discount percentage"></div><div class="modal-footer"><button type="button" class="btn btn-danger" onclick="closeModal('membershipModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Plan</button></div></form></div></div>
-
+    <div class="modal" id="appointmentModal"><div class="modal-content"><div class="modal-header"><h3 id="appointmentModalTitle">New Booking</h3><button class="close-btn" onclick="closeModal('appointmentModal')">&times;</button></div><form id="appointmentForm"><input type="hidden" name="editId"><div class="form-group"><label>Customer *</label><select class="form-control" name="customerName" required id="apptCustomerSelect"></select></div><div class="form-group"><label>Services * (tap to select)</label><div class="multi-select-container"><div class="multi-select-tags" id="apptServicesTags" onclick="toggleDropdown('apptServicesDropdown')"><span style="color:var(--text-light);" id="apptServicesPH">Tap here to select services...</span></div><div class="multi-select-dropdown" id="apptServicesDropdown"></div></div></div><div class="form-group"><label>Staff * (tap to select)</label><div class="multi-select-container"><div class="multi-select-tags" id="apptStaffTags" onclick="toggleDropdown('apptStaffDropdown')"><span style="color:var(--text-light);" id="apptStaffPH">Tap here to select staff...</span></div><div class="multi-select-dropdown" id="apptStaffDropdown"></div></div></div><div class="form-group"><label>Date *</label><input class="form-control" name="appointmentDate" type="date" required></div><div class="form-group"><label>Time *</label><input class="form-control" name="time" type="time" required></div><div class="modal-footer"><button type="button" class="btn btn-danger" onclick="closeModal('appointmentModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-calendar-check"></i> Book Appointment</button></div></form></div></div>
+    <div class="modal" id="billingModal"><div class="modal-content"><div class="modal-header"><h3 id="billingModalTitle">Generate Invoice</h3><button class="close-btn" onclick="closeModal('billingModal')">&times;</button></div><form id="billingForm"><input type="hidden" name="editId"><div class="form-group"><label>Customer *</label><select class="form-control" name="customerName" required id="billingCustomerSelect"></select></div><div class="form-group"><label>Services * (tap to select)</label><div class="multi-select-container"><div class="multi-select-tags" id="billingServicesTags" onclick="toggleDropdown('billingServicesDropdown')"><span style="color:var(--text-light);" id="billingServicesPH">Tap here to select services...</span></div><div class="multi-select-dropdown" id="billingServicesDropdown"></div></div></div><div class="billing-summary-box" id="selectedServicesBox" style="display:none;"><strong>Selected:</strong><div id="selectedServicesList"></div><div class="sum-row sum-total"><span>Subtotal:</span><span id="billingSubtotalSpan">$0</span></div></div><div class="gst-toggle-row"><span>Apply GST</span><div class="toggle-switch on" id="gstToggleSwitch" onclick="toggleGST()"></div></div><div class="gst-details show" id="gstDetails"><div class="form-group"><label>GST Type</label><select class="form-control" id="gstTypeSelect" onchange="calcBilling()"><option value="overall">Overall GST</option><option value="perService">Per Service GST</option></select></div><div class="form-group"><label>GST Rate (%)</label><input class="form-control" type="number" id="overallGstRate" value="18" oninput="calcBilling()"></div></div><div class="form-group"><label>Discount ($)</label><input class="form-control" type="number" id="billingDiscountAmt" value="0" oninput="calcBilling()"></div><div class="billing-summary-box"><strong>Summary:</strong><div class="sum-row"><span>Subtotal:</span><span id="calcSubtotal">$0</span></div><div class="sum-row"><span>GST:</span><span id="calcGst">$0</span></div><div class="sum-row"><span>Discount:</span><span id="calcDiscount">$0</span></div><div class="sum-row sum-total"><span>Final:</span><span id="calcFinal">$0</span></div></div><div class="form-group"><label>Payment Method</label><select class="form-control" name="paymentMethod"><option>Cash</option><option>Card</option><option>UPI</option></select></div><div class="modal-footer"><button type="button" class="btn btn-danger" onclick="closeModal('billingModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-file-invoice"></i> Generate Invoice</button></div></form></div></div>
+    <div class="modal" id="staffModal"><div class="modal-content"><div class="modal-header"><h3>Add Staff</h3><button class="close-btn" onclick="closeModal('staffModal')">&times;</button></div><form id="staffForm"><input type="hidden" name="editId"><div class="form-group"><label>Name *</label><input class="form-control" name="name" required></div><div class="form-group"><label>Role *</label><input class="form-control" name="role" required></div><div class="form-group"><label>Mobile</label><input class="form-control" name="mobile"></div><div class="form-group"><label>Rating</label><input class="form-control" name="rating" type="number" step="0.1" value="5"></div><div class="modal-footer"><button type="button" class="btn btn-danger" onclick="closeModal('staffModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Staff</button></div></form></div></div>
+    <div class="modal" id="serviceModal"><div class="modal-content"><div class="modal-header"><h3>Add Service</h3><button class="close-btn" onclick="closeModal('serviceModal')">&times;</button></div><form id="serviceForm"><input type="hidden" name="editId"><div class="form-group"><label>Name *</label><input class="form-control" name="serviceName" required></div><div class="form-group"><label>Category</label><select class="form-control" name="category"><option>Hair</option><option>Skin Care</option><option>Nails</option><option>Massage</option></select></div><div class="form-group"><label>Price ($) *</label><input class="form-control" name="price" type="number" required></div><div class="form-group"><label>Duration (mins)</label><input class="form-control" name="duration" type="number" value="60"></div><div class="form-group"><label>GST (%)</label><input class="form-control" name="gstRate" type="number" value="18"></div><div class="modal-footer"><button type="button" class="btn btn-danger" onclick="closeModal('serviceModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Service</button></div></form></div></div>
+    <div class="modal" id="inventoryModal"><div class="modal-content"><div class="modal-header"><h3>Add Product</h3><button class="close-btn" onclick="closeModal('inventoryModal')">&times;</button></div><form id="inventoryForm"><input type="hidden" name="editId"><div class="form-group"><label>Name *</label><input class="form-control" name="productName" required></div><div class="form-group"><label>Qty *</label><input class="form-control" name="quantity" type="number" required></div><div class="form-group"><label>Price ($)</label><input class="form-control" name="sellingPrice" type="number"></div><div class="modal-footer"><button type="button" class="btn btn-danger" onclick="closeModal('inventoryModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button></div></form></div></div>
+    <div class="modal" id="marketingModal"><div class="modal-content"><div class="modal-header"><h3>Campaign</h3><button class="close-btn" onclick="closeModal('marketingModal')">&times;</button></div><form id="marketingForm"><input type="hidden" name="editId"><div class="form-group"><label>Name *</label><input class="form-control" name="campaignName" required></div><div class="form-group"><label>Type</label><select class="form-control" name="campaignType"><option>SMS</option><option>Email</option></select></div><div class="form-group"><label>Coupon</label><input class="form-control" name="couponCode"></div><div class="form-group"><label>Discount (%)</label><input class="form-control" name="discountValue" type="number"></div><div class="modal-footer"><button type="button" class="btn btn-danger" onclick="closeModal('marketingModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button></div></form></div></div>
+    <div class="modal" id="membershipModal"><div class="modal-content"><div class="modal-header"><h3>Add Plan</h3><button class="close-btn" onclick="closeModal('membershipModal')">&times;</button></div><form id="membershipForm"><input type="hidden" name="editId"><div class="form-group"><label>Name *</label><input class="form-control" name="planName" required></div><div class="form-group"><label>Price ($) *</label><input class="form-control" name="price" type="number" required></div><div class="form-group"><label>Discount (%)</label><input class="form-control" name="discountPercentage" type="number" value="0"></div><div class="modal-footer"><button type="button" class="btn btn-danger" onclick="closeModal('membershipModal')">Cancel</button><button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button></div></form></div></div>
     <div class="toast-container" id="toastContainer"></div>
     <nav class="mobile-nav"><div class="mobile-nav-items"><div class="mobile-nav-item active" data-page="dashboard"><i class="fas fa-th-large"></i><span>Home</span></div><div class="mobile-nav-item" data-page="appointments"><i class="fas fa-calendar"></i><span>Book</span></div><div class="mobile-nav-item" data-page="customers"><i class="fas fa-users"></i><span>Client</span></div><div class="mobile-nav-item" data-page="billing"><i class="fas fa-file-invoice"></i><span>Bill</span></div><div class="mobile-nav-item" data-page="more"><i class="fas fa-ellipsis-h"></i><span>More</span></div></div></nav>
 
     <script>
-        const DB_KEY = 'salon_crm_final_v2';
+        const DB_KEY = 'salon_crm_search_v1';
         const defaultData = {
             customers: [{ id: 'C1', fullName: 'Emma Richardson', mobile: '555-0101', email: 'emma@email.com', membership: 'Gold', loyaltyPoints: 1250, status: 'active' }, { id: 'C2', fullName: 'Liam Johnson', mobile: '555-0102', email: 'liam@email.com', membership: 'Silver', loyaltyPoints: 450, status: 'active' }, { id: 'C3', fullName: 'Sophia Kim', mobile: '555-0103', email: 'sophia@email.com', membership: 'None', loyaltyPoints: 50, status: 'active' }],
-            appointments: [{ id: 'B1', customerName: 'Emma Richardson', services: ['Haircut & Style'], staff: ['Sarah Wilson'], appointmentDate: '2024-12-20', time: '10:00', duration: 60, bookingStatus: 'Confirmed', paymentStatus: 'Paid' }, { id: 'B2', customerName: 'Liam Johnson', services: ['Beard Trim'], staff: ['Mike Davis'], appointmentDate: '2024-12-20', time: '11:30', duration: 30, bookingStatus: 'Pending', paymentStatus: 'Unpaid' }],
+            appointments: [{ id: 'B1', customerName: 'Emma Richardson', services: ['Haircut & Style'], staff: ['Sarah Wilson'], appointmentDate: '2024-12-20', time: '10:00', duration: 60, bookingStatus: 'Confirmed', paymentStatus: 'Paid' }, { id: 'B2', customerName: 'Liam Johnson', services: ['Beard Trim'], staff: ['Mike Davis'], appointmentDate: '2024-12-22', time: '11:30', duration: 30, bookingStatus: 'Pending', paymentStatus: 'Unpaid' }, { id: 'B3', customerName: 'Sophia Kim', services: ['Nail Art'], staff: ['Lisa Chen'], appointmentDate: '2024-12-25', time: '14:00', duration: 45, bookingStatus: 'Confirmed', paymentStatus: 'Paid' }],
             staff: [{ id: 'S1', name: 'Sarah Wilson', role: 'Senior Stylist', mobile: '555-0201', rating: 4.9, status: 'active' }, { id: 'S2', name: 'Mike Davis', role: 'Barber', mobile: '555-0202', rating: 4.7, status: 'active' }, { id: 'S3', name: 'Lisa Chen', role: 'Nail Artist', mobile: '555-0203', rating: 4.8, status: 'active' }],
             services: [{ id: 'SV1', serviceName: 'Haircut & Style', category: 'Hair', price: 85, duration: 60, gstRate: 18 }, { id: 'SV2', serviceName: 'Beard Trim', category: 'Grooming', price: 35, duration: 30, gstRate: 18 }, { id: 'SV3', serviceName: 'Facial Treatment', category: 'Skin Care', price: 120, duration: 75, gstRate: 18 }, { id: 'SV4', serviceName: 'Nail Art', category: 'Nails', price: 55, duration: 45, gstRate: 18 }, { id: 'SV5', serviceName: 'Massage Therapy', category: 'Massage', price: 150, duration: 90, gstRate: 18 }],
-            billing: [{ id: 'INV1', customerName: 'Emma Richardson', services: ['Haircut & Style'], gstEnabled: true, gstType: 'overall', overallGstRate: 18, subtotal: 85, gstAmount: 15.3, discount: 0, finalAmount: 100.3, paymentMethod: 'Card', paymentStatus: 'Paid', date: '2024-12-15' }, { id: 'INV2', customerName: 'Liam Johnson', services: ['Beard Trim'], gstEnabled: true, gstType: 'overall', overallGstRate: 18, subtotal: 35, gstAmount: 6.3, discount: 0, finalAmount: 41.3, paymentMethod: 'Cash', paymentStatus: 'Pending', date: '2024-12-15' }],
+            billing: [{ id: 'INV1', customerName: 'Emma Richardson', services: ['Haircut & Style'], gstEnabled: true, gstType: 'overall', overallGstRate: 18, subtotal: 85, gstAmount: 15.3, discount: 0, finalAmount: 100.3, paymentMethod: 'Card', paymentStatus: 'Paid', date: '2024-12-15' }, { id: 'INV2', customerName: 'Liam Johnson', services: ['Beard Trim'], gstEnabled: true, gstType: 'overall', overallGstRate: 18, subtotal: 35, gstAmount: 6.3, discount: 0, finalAmount: 41.3, paymentMethod: 'Cash', paymentStatus: 'Pending', date: '2024-12-16' }, { id: 'INV3', customerName: 'Sophia Kim', services: ['Nail Art'], gstEnabled: true, gstType: 'overall', overallGstRate: 18, subtotal: 55, gstAmount: 9.9, discount: 5, finalAmount: 59.9, paymentMethod: 'UPI', paymentStatus: 'Paid', date: '2024-12-18' }],
             inventory: [{ id: 'P1', productName: 'Premium Shampoo', quantity: 25, sellingPrice: 30, stockStatus: 'In Stock' }, { id: 'P2', productName: 'Hair Color Kit', quantity: 3, sellingPrice: 80, stockStatus: 'Low Stock' }],
-            marketing: [{ id: 'M1', campaignName: 'Holiday Special', campaignType: 'SMS', couponCode: 'HOLIDAY20', discountValue: 20 }],
+            marketing: [{ id: 'M1', campaignName: 'Holiday Special', campaignType: 'SMS', couponCode: 'HOLIDAY20', discountValue: 20 }, { id: 'M2', campaignName: 'New Year Offer', campaignType: 'Email', couponCode: 'NEWYEAR25', discountValue: 25 }],
             membership: [{ id: 'MP1', planName: 'Silver', price: 29, discountPercentage: 5, rewardPoints: 100 }, { id: 'MP2', planName: 'Gold', price: 59, discountPercentage: 10, rewardPoints: 250 }, { id: 'MP3', planName: 'Platinum', price: 99, discountPercentage: 20, rewardPoints: 500 }],
-            notifications: [{ id: 'N1', title: 'New Booking', message: 'Emma booked Haircut', type: 'info', dateTime: '2024-12-20', read: false }],
-            nextIds: { customers: 4, appointments: 3, staff: 4, services: 6, billing: 3, inventory: 3, marketing: 2, membership: 4, notifications: 2 }
+            notifications: [{ id: 'N1', title: 'New Booking', message: 'Emma booked Haircut', type: 'info', dateTime: '2024-12-20', read: false }, { id: 'N2', title: 'Payment Received', message: 'INV3 paid via UPI', type: 'success', dateTime: '2024-12-18', read: true }],
+            nextIds: { customers: 4, appointments: 4, staff: 4, services: 6, billing: 4, inventory: 3, marketing: 3, membership: 4, notifications: 3 }
         };
         let appData = JSON.parse(localStorage.getItem(DB_KEY)) || JSON.parse(JSON.stringify(defaultData));
         if (!localStorage.getItem(DB_KEY)) localStorage.setItem(DB_KEY, JSON.stringify(appData));
@@ -442,7 +461,9 @@
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             document.querySelectorAll(`[data-page="${page}"]`).forEach(l => l.classList.add('active'));
             document.querySelectorAll('.mobile-nav-item').forEach(i => i.classList.remove('active')); const mi = document.querySelector(`.mobile-nav-item[data-page="${page}"]`); if (mi) mi.classList.add('active'); if (window.innerWidth <= 768) { document.getElementById('sidebar').classList.remove('mobile-open');
-                document.getElementById('sidebarOverlay').classList.remove('active'); } if (page === 'reports') updateReports(); if (page === 'settings') initBusinessHours(); if (page === 'dashboard') initSalesChart(); if (page === 'more') { document.getElementById('sidebar').classList.add('mobile-open');
+                document.getElementById('sidebarOverlay').classList.remove('active'); }
+            document.getElementById('searchDropdown').classList.remove('show');
+            document.getElementById('globalSearch').value = ''; if (page === 'reports') updateReports(); if (page === 'settings') initBusinessHours(); if (page === 'dashboard') initSalesChart(); if (page === 'more') { document.getElementById('sidebar').classList.add('mobile-open');
                 document.getElementById('sidebarOverlay').classList.add('active'); } }
         function generateId(p, t) { appData.nextIds[t] = (appData.nextIds[t] || 1) + 1;
             save(); return p + (appData.nextIds[t] - 1); }
@@ -451,6 +472,7 @@
                 renderAll();
                 showToast('Deleted!'); } }
 
+        // Multi-select functions
         function setupDropdown(ddId, options, selArr, updateFn) { document.getElementById(ddId).innerHTML = options.map(o => `<div class="multi-select-option ${selArr.includes(o.value)?'selected':''}" onclick="toggleOption('${o.value.replace(/'/g,"\\'")}','${ddId}','${updateFn}')"><span>${o.label}</span>${o.price!==undefined?`<span class="option-price">$${o.price}</span>`:''}</div>`).join(''); }
         function toggleOption(val, ddId, updateFn) { let arr = updateFn === 'updateApptServiceTags' ? selApptServices : updateFn === 'updateApptStaffTags' ? selApptStaff : selBillingServices;
             const idx = arr.indexOf(val); if (idx > -1) arr.splice(idx, 1);
@@ -507,15 +529,146 @@
             document.getElementById('apptCustomerSelect').innerHTML = appData.customers.map(c => `<option>${c.fullName}</option>`).join('');
             document.getElementById('billingCustomerSelect').innerHTML = appData.customers.map(c => `<option>${c.fullName}</option>`).join(''); }
 
-        function renderAll() {
-            document.getElementById('customersTable').innerHTML = appData.customers.map(c => `<tr><td>${c.fullName}</td><td>${c.mobile}</td><td>${c.email}</td><td>${c.membership}</td><td><button class="btn btn-xs btn-warning" onclick="openCustomerModal('${c.id}')">✎</button> <button class="btn btn-xs btn-danger" onclick="deleteItem('customers','${c.id}')">×</button></td></tr>`).join('');
-            document.getElementById('appointmentsTable').innerHTML = appData.appointments.map(a => `<tr><td>${a.customerName}</td><td>${(a.services||[]).join(', ')}</td><td>${(a.staff||[]).join(', ')}</td><td>${a.appointmentDate}</td><td><span class="status-badge status-${a.bookingStatus.toLowerCase()}">${a.bookingStatus}</span></td><td><button class="btn btn-xs btn-success" onclick="updateBooking('${a.id}')">✓</button> <button class="btn btn-xs btn-warning" onclick="openAppointmentModal('${a.id}')">✎</button> <button class="btn btn-xs btn-danger" onclick="deleteItem('appointments','${a.id}')">×</button></td></tr>`).join('');
-            document.getElementById('billingTable').innerHTML = appData.billing.map(b => `<tr><td>${b.id}</td><td>${b.customerName}</td><td>${(b.services||[]).join(', ')}</td><td>$${b.finalAmount}</td><td><span class="status-badge status-${b.paymentStatus==='Paid'?'paid':'unpaid'}">${b.paymentStatus}</span></td><td><button class="btn btn-xs btn-warning" onclick="openBillingModal('${b.id}')">✎</button></td></tr>`).join('');
-            document.getElementById('staffTable').innerHTML = appData.staff.map(s => `<tr><td>${s.name}</td><td>${s.role}</td><td>${s.mobile}</td><td>⭐${s.rating}</td><td><button class="btn btn-xs btn-danger" onclick="deleteItem('staff','${s.id}')">×</button></td></tr>`).join('');
-            document.getElementById('servicesTable').innerHTML = appData.services.map(s => `<tr><td>${s.serviceName}</td><td>${s.category}</td><td>$${s.price}</td><td>${s.duration}m</td><td><button class="btn btn-xs btn-danger" onclick="deleteItem('services','${s.id}')">×</button></td></tr>`).join('');
-            document.getElementById('inventoryTable').innerHTML = appData.inventory.map(i => `<tr><td>${i.productName}</td><td>${i.quantity}</td><td>$${i.sellingPrice}</td><td><span class="status-badge status-${i.stockStatus==='In Stock'?'active':'inactive'}">${i.stockStatus}</span></td><td><button class="btn btn-xs btn-danger" onclick="deleteItem('inventory','${i.id}')">×</button></td></tr>`).join('');
-            document.getElementById('marketingTable').innerHTML = appData.marketing.map(m => `<tr><td>${m.campaignName}</td><td>${m.campaignType}</td><td>${m.couponCode}</td><td>${m.discountValue}%</td><td><button class="btn btn-xs btn-danger" onclick="deleteItem('marketing','${m.id}')">×</button></td></tr>`).join('');
-            document.getElementById('membershipTable').innerHTML = appData.membership.map(m => `<tr><td>${m.planName}</td><td>$${m.price}</td><td>${m.discountPercentage}%</td><td>${m.rewardPoints}</td><td><button class="btn btn-xs btn-danger" onclick="deleteItem('membership','${m.id}')">×</button></td></tr>`).join('');
+        // ============ GLOBAL SEARCH ============
+        function handleGlobalSearch(query) {
+            const dd = document.getElementById('searchDropdown');
+            if (!query || query.trim().length < 1) { dd.classList.remove('show'); return; }
+            const q = query.toLowerCase().trim();
+            const results = [];
+            // Module keywords
+            const modules = [
+                { name: 'Dashboard', icon: 'fa-th-large', page: 'dashboard', keywords: ['dashboard', 'home', 'overview', 'stats'] },
+                { name: 'Customers', icon: 'fa-users', page: 'customers', keywords: ['customer', 'client', 'user', 'people', 'c'] },
+                { name: 'Appointments', icon: 'fa-calendar-alt', page: 'appointments', keywords: ['appointment', 'booking', 'schedule', 'calendar', 'a', 'book'] },
+                { name: 'Staff', icon: 'fa-user-tie', page: 'staff', keywords: ['staff', 'employee', 'stylist', 'barber', 'worker'] },
+                { name: 'Services', icon: 'fa-spa', page: 'services', keywords: ['service', 'treatment', 'haircut', 'facial', 'spa'] },
+                { name: 'Billing', icon: 'fa-file-invoice-dollar', page: 'billing', keywords: ['billing', 'bill', 'invoice', 'payment', 'b', 'inv', 'money'] },
+                { name: 'Inventory', icon: 'fa-boxes', page: 'inventory', keywords: ['inventory', 'stock', 'product', 'item', 'supply', 'i'] },
+                { name: 'Marketing', icon: 'fa-bullhorn', page: 'marketing', keywords: ['marketing', 'campaign', 'promo', 'sms', 'email', 'm'] },
+                { name: 'Membership', icon: 'fa-crown', page: 'membership', keywords: ['membership', 'loyalty', 'plan', 'reward', 'vip', 'gold'] },
+                { name: 'Reports', icon: 'fa-chart-bar', page: 'reports', keywords: ['report', 'analytics', 'chart', 'statistics', 'analysis', 'r'] },
+                { name: 'Notifications', icon: 'fa-bell', page: 'notifications', keywords: ['notification', 'alert', 'reminder', 'n'] },
+                { name: 'Settings', icon: 'fa-cog', page: 'settings', keywords: ['settings', 'config', 'preference', 'setup', 's'] },
+                { name: 'Chat', icon: 'fa-comments', page: 'chat', keywords: ['chat', 'message', 'support', 'help', 'talk'] },
+            ];
+            // Match modules
+            modules.forEach(m => {
+                if (m.keywords.some(k => k.includes(q) || q.includes(k)) || m.name.toLowerCase().includes(q)) {
+                    results.push({ type: 'module', name: m.name, icon: m.icon, page: m.page, desc: 'Navigate to module' });
+                }
+            });
+            // Match customers
+            appData.customers.forEach(c => {
+                if (c.fullName.toLowerCase().includes(q) || c.mobile.includes(q) || c.email.toLowerCase().includes(q) || c.id.toLowerCase().includes(q)) {
+                    results.push({ type: 'customer', name: c.fullName, icon: 'fa-user', page: 'customers', desc: `${c.mobile} | ${c.membership}`, id: c.id });
+                }
+            });
+            // Match appointments
+            appData.appointments.forEach(a => {
+                if (a.customerName.toLowerCase().includes(q) || a.id.toLowerCase().includes(q) || (a.services || []).some(s => s.toLowerCase().includes(q))) {
+                    results.push({ type: 'appointment', name: a.customerName, icon: 'fa-calendar', page: 'appointments', desc: `${a.appointmentDate} | ${(a.services||[]).join(', ')}`, id: a.id });
+                }
+            });
+            // Match billing
+            appData.billing.forEach(b => {
+                if (b.customerName.toLowerCase().includes(q) || b.id.toLowerCase().includes(q)) {
+                    results.push({ type: 'billing', name: `Invoice ${b.id}`, icon: 'fa-file-invoice', page: 'billing', desc: `${b.customerName} | $${b.finalAmount}`, id: b.id });
+                }
+            });
+            // Match inventory
+            appData.inventory.forEach(i => {
+                if (i.productName.toLowerCase().includes(q) || i.id.toLowerCase().includes(q)) {
+                    results.push({ type: 'inventory', name: i.productName, icon: 'fa-box', page: 'inventory', desc: `Stock: ${i.quantity} | $${i.sellingPrice}`, id: i.id });
+                }
+            });
+            // Match staff
+            appData.staff.forEach(s => {
+                if (s.name.toLowerCase().includes(q) || s.role.toLowerCase().includes(q) || s.mobile.includes(q)) {
+                    results.push({ type: 'staff', name: s.name, icon: 'fa-user-tie', page: 'staff', desc: `${s.role} | ⭐${s.rating}`, id: s.id });
+                }
+            });
+            // Match services
+            appData.services.forEach(s => {
+                if (s.serviceName.toLowerCase().includes(q) || s.category.toLowerCase().includes(q)) {
+                    results.push({ type: 'service', name: s.serviceName, icon: 'fa-spa', page: 'services', desc: `$${s.price} | ${s.category}`, id: s.id });
+                }
+            });
+            // Render
+            const unique = results.slice(0, 15);
+            dd.innerHTML = unique.length > 0 ? unique.map(r => `<div class="search-result-item" onclick="navigateToSearchResult('${r.page}', '${r.type}', '${r.id || ''}')"><i class="fas ${r.icon}"></i><div><strong>${r.name}</strong><br><small style="color:var(--text-light);">${r.desc}</small></div><span class="badge-result">${r.type}</span></div>`).join('') : '<div class="search-result-item" style="color:var(--text-light);">No results found</div>';
+            dd.classList.add('show');
+        }
+        function navigateToSearchResult(page, type, id) {
+            navigateTo(page);
+            document.getElementById('searchDropdown').classList.remove('show');
+            document.getElementById('globalSearch').value = ''; if (id && type === 'customer') { setTimeout(() => openCustomerModal(id), 300); } else if (id && type === 'appointment') { setTimeout(() => openAppointmentModal(id), 300); } else if (id && type === 'billing') { setTimeout(() => openBillingModal(id), 300); }
+            showToast(`Navigated to ${page}`);
+        }
+        document.addEventListener('click', function(e) { if (!e.target.closest('.search-wrapper')) document.getElementById('searchDropdown').classList.remove('show'); });
+
+        // ============ RENDER FUNCTIONS WITH SEARCH ============
+        function renderCustomers() {
+            const q = (document.getElementById('customerSearch')?.value || '').toLowerCase();
+            const sf = document.getElementById('customerFilter')?.value || 'all';
+            const mf = document.getElementById('customerMembershipFilter')?.value || 'all';
+            let list = appData.customers.filter(c => (!q || c.fullName.toLowerCase().includes(q) || c.mobile.includes(q) || c.email.toLowerCase().includes(q) || c.id.toLowerCase().includes(q)) && (sf === 'all' || c.status === sf) && (mf === 'all' || c.membership === mf));
+            document.getElementById('customersTable').innerHTML = list.map(c => `<tr><td>${highlightMatch(c.fullName,q)}</td><td>${highlightMatch(c.mobile,q)}</td><td>${highlightMatch(c.email,q)}</td><td>${c.membership}</td><td>${c.loyaltyPoints}</td><td><button class="btn btn-xs btn-warning" onclick="openCustomerModal('${c.id}')">✎</button> <button class="btn btn-xs btn-danger" onclick="deleteItem('customers','${c.id}')">×</button></td></tr>`).join('');
+        }
+        function renderAppointments() {
+            const q = (document.getElementById('appointmentSearch')?.value || '').toLowerCase();
+            const sf = document.getElementById('appointmentFilter')?.value || 'all';
+            const df = document.getElementById('apptDateFrom')?.value || '';
+            const dt = document.getElementById('apptDateTo')?.value || '';
+            let list = appData.appointments.filter(a => (!q || a.customerName.toLowerCase().includes(q) || (a.services||[]).some(s=>s.toLowerCase().includes(q)) || a.id.toLowerCase().includes(q)) && (sf === 'all' || a.bookingStatus === sf) && (!df || a.appointmentDate >= df) && (!dt || a.appointmentDate <= dt));
+            document.getElementById('appointmentsTable').innerHTML = list.map(a => `<tr><td>${highlightMatch(a.customerName,q)}</td><td>${(a.services||[]).join(', ')}</td><td>${(a.staff||[]).join(', ')}</td><td>${a.appointmentDate}</td><td><span class="status-badge status-${a.bookingStatus.toLowerCase()}">${a.bookingStatus}</span></td><td><button class="btn btn-xs btn-success" onclick="updateBooking('${a.id}')">✓</button> <button class="btn btn-xs btn-warning" onclick="openAppointmentModal('${a.id}')">✎</button> <button class="btn btn-xs btn-danger" onclick="deleteItem('appointments','${a.id}')">×</button></td></tr>`).join('');
+        }
+        function renderStaff() {
+            const q = (document.getElementById('staffSearch')?.value || '').toLowerCase();
+            const sf = document.getElementById('staffFilter')?.value || 'all';
+            let list = appData.staff.filter(s => (!q || s.name.toLowerCase().includes(q) || s.role.toLowerCase().includes(q) || s.mobile.includes(q)) && (sf === 'all' || s.status === sf));
+            document.getElementById('staffTable').innerHTML = list.map(s => `<tr><td>${highlightMatch(s.name,q)}</td><td>${highlightMatch(s.role,q)}</td><td>${highlightMatch(s.mobile,q)}</td><td>⭐${s.rating}</td><td><button class="btn btn-xs btn-danger" onclick="deleteItem('staff','${s.id}')">×</button></td></tr>`).join('');
+        }
+        function renderServices() {
+            const q = (document.getElementById('serviceSearch')?.value || '').toLowerCase();
+            const cf = document.getElementById('serviceCatFilter')?.value || 'all';
+            let list = appData.services.filter(s => (!q || s.serviceName.toLowerCase().includes(q) || s.category.toLowerCase().includes(q)) && (cf === 'all' || s.category === cf));
+            document.getElementById('servicesTable').innerHTML = list.map(s => `<tr><td>${highlightMatch(s.serviceName,q)}</td><td>${s.category}</td><td>$${s.price}</td><td>${s.duration}m</td><td>${s.gstRate}%</td><td><button class="btn btn-xs btn-danger" onclick="deleteItem('services','${s.id}')">×</button></td></tr>`).join('');
+        }
+        function renderBilling() {
+            const q = (document.getElementById('billingSearch')?.value || '').toLowerCase();
+            const pf = document.getElementById('billingPaymentFilter')?.value || 'all';
+            const df = document.getElementById('billDateFrom')?.value || '';
+            const dt = document.getElementById('billDateTo')?.value || '';
+            let list = appData.billing.filter(b => (!q || b.customerName.toLowerCase().includes(q) || b.id.toLowerCase().includes(q)) && (pf === 'all' || b.paymentStatus === pf) && (!df || b.date >= df) && (!dt || b.date <= dt));
+            document.getElementById('billingTable').innerHTML = list.map(b => `<tr><td>${highlightMatch(b.id,q)}</td><td>${highlightMatch(b.customerName,q)}</td><td>${(b.services||[]).join(', ')}</td><td>$${b.finalAmount}</td><td><span class="status-badge status-${b.paymentStatus==='Paid'?'paid':'unpaid'}">${b.paymentStatus}</span></td><td>${b.date}</td><td><button class="btn btn-xs btn-warning" onclick="openBillingModal('${b.id}')">✎</button></td></tr>`).join('');
+        }
+        function renderInventory() {
+            const q = (document.getElementById('inventorySearch')?.value || '').toLowerCase();
+            const sf = document.getElementById('inventoryStockFilter')?.value || 'all';
+            let list = appData.inventory.filter(i => (!q || i.productName.toLowerCase().includes(q)) && (sf === 'all' || i.stockStatus === sf));
+            document.getElementById('inventoryTable').innerHTML = list.map(i => `<tr><td>${highlightMatch(i.productName,q)}</td><td>${i.quantity}</td><td>$${i.sellingPrice}</td><td><span class="status-badge status-${i.stockStatus==='In Stock'?'active':'inactive'}">${i.stockStatus}</span></td><td><button class="btn btn-xs btn-danger" onclick="deleteItem('inventory','${i.id}')">×</button></td></tr>`).join('');
+        }
+        function renderMarketing() {
+            const q = (document.getElementById('marketingSearch')?.value || '').toLowerCase();
+            const tf = document.getElementById('marketingTypeFilter')?.value || 'all';
+            let list = appData.marketing.filter(m => (!q || m.campaignName.toLowerCase().includes(q) || m.couponCode.toLowerCase().includes(q)) && (tf === 'all' || m.campaignType === tf));
+            document.getElementById('marketingTable').innerHTML = list.map(m => `<tr><td>${highlightMatch(m.campaignName,q)}</td><td>${m.campaignType}</td><td>${highlightMatch(m.couponCode,q)}</td><td>${m.discountValue}%</td><td><button class="btn btn-xs btn-danger" onclick="deleteItem('marketing','${m.id}')">×</button></td></tr>`).join('');
+        }
+        function renderMembership() {
+            const q = (document.getElementById('membershipSearch')?.value || '').toLowerCase();
+            let list = appData.membership.filter(m => !q || m.planName.toLowerCase().includes(q));
+            document.getElementById('membershipTable').innerHTML = list.map(m => `<tr><td>${highlightMatch(m.planName,q)}</td><td>$${m.price}</td><td>${m.discountPercentage}%</td><td>${m.rewardPoints}</td><td><button class="btn btn-xs btn-danger" onclick="deleteItem('membership','${m.id}')">×</button></td></tr>`).join('');
+        }
+        function highlightMatch(text, query) { if (!query || !text) return text; const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'); return text.replace(regex, '<span class="search-highlight">$1</span>'); }
+
+        function renderAll() { renderCustomers();
+            renderAppointments();
+            renderStaff();
+            renderServices();
+            renderBilling();
+            renderInventory();
+            renderMarketing();
+            renderMembership();
             document.getElementById('notificationsList').innerHTML = appData.notifications.map(n => `<div style="padding:10px;border-bottom:1px solid var(--border);"><strong>${n.title}</strong><p style="margin:4px 0;color:var(--text-light);">${n.message}</p></div>`).join('');
             document.getElementById('dashCustomers').textContent = appData.customers.length;
             document.getElementById('dashBookings').textContent = appData.appointments.length;
@@ -525,14 +678,15 @@
             const sc = {};
             appData.appointments.forEach(a => { (a.services || []).forEach(s => { sc[s] = (sc[s] || 0) + 1; }); });
             document.getElementById('popularServices').innerHTML = Object.entries(sc).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([n, c]) => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>${n}</span><strong>${c}</strong></div>`).join('');
-            initDropdowns();
-        }
+            initDropdowns(); }
+
         function updateBooking(id) { const a = appData.appointments.find(x => x.id === id); if (a) { a.bookingStatus = 'Confirmed';
                 a.paymentStatus = 'Paid';
                 save();
                 renderAll();
                 showToast('Confirmed!'); } }
 
+        // Modal open functions
         function openCustomerModal(eid) { const f = document.getElementById('customerForm');
             f.reset();
             f.editId.value = eid || '';
@@ -613,15 +767,15 @@
                     f.discountPercentage.value = m.discountPercentage; } }
             openModal('membershipModal'); }
 
-        // Form submissions
+        // Form submissions (same)
         document.getElementById('customerForm').addEventListener('submit', function(e) { e.preventDefault();
             const fd = new FormData(e.target),
                 eid = fd.get('editId'); const d = { id: eid || generateId('C', 'customers'), fullName: fd.get('fullName'), mobile: fd.get('mobile'), email: fd.get('email'), membership: fd.get('membership') || 'None', loyaltyPoints: parseInt(fd.get('loyaltyPoints')) || 0, status: 'active' }; if (eid) { const i = appData.customers.findIndex(x => x.id === eid); if (i > -1) appData.customers[i] = d; } else appData.customers.push(d);
             save();
             closeModal('customerModal');
             renderAll();
-            showToast('Customer saved!'); });
-        document.getElementById('appointmentForm').addEventListener('submit', function(e) { e.preventDefault(); if (!selApptServices.length) return showToast('Please select at least one service', 'error'); if (!selApptStaff.length) return showToast('Please select at least one staff', 'error');
+            showToast('Saved!'); });
+        document.getElementById('appointmentForm').addEventListener('submit', function(e) { e.preventDefault(); if (!selApptServices.length) return showToast('Select services', 'error'); if (!selApptStaff.length) return showToast('Select staff', 'error');
             const fd = new FormData(e.target),
                 eid = fd.get('editId'); const d = { id: eid || generateId('B', 'appointments'), customerName: fd.get('customerName'), services: [...selApptServices], staff: [...selApptStaff], appointmentDate: fd.get('appointmentDate'), time: fd.get('time'), duration: 60, bookingStatus: 'Pending', paymentStatus: 'Unpaid' }; if (eid) { const i = appData.appointments.findIndex(x => x.id === eid); if (i > -1) appData.appointments[i] = d; } else appData.appointments.push(d);
             save();
@@ -629,8 +783,8 @@
             selApptServices = [];
             selApptStaff = [];
             renderAll();
-            showToast('Appointment booked!'); });
-        document.getElementById('billingForm').addEventListener('submit', function(e) { e.preventDefault(); if (!selBillingServices.length) return showToast('Please select at least one service', 'error');
+            showToast('Booked!'); });
+        document.getElementById('billingForm').addEventListener('submit', function(e) { e.preventDefault(); if (!selBillingServices.length) return showToast('Select services', 'error');
             const fd = new FormData(e.target),
                 eid = fd.get('editId');
             let subtotal = 0;
@@ -642,21 +796,21 @@
             selBillingServices = [];
             billingGstEnabled = true;
             renderAll();
-            showToast('Invoice generated!'); });
+            showToast('Generated!'); });
         document.getElementById('staffForm').addEventListener('submit', function(e) { e.preventDefault();
             const fd = new FormData(e.target),
                 eid = fd.get('editId'); const d = { id: eid || generateId('S', 'staff'), name: fd.get('name'), role: fd.get('role'), mobile: fd.get('mobile') || '', rating: parseFloat(fd.get('rating')) || 5, status: 'active' }; if (eid) { const i = appData.staff.findIndex(x => x.id === eid); if (i > -1) appData.staff[i] = d; } else appData.staff.push(d);
             save();
             closeModal('staffModal');
             renderAll();
-            showToast('Staff saved!'); });
+            showToast('Saved!'); });
         document.getElementById('serviceForm').addEventListener('submit', function(e) { e.preventDefault();
             const fd = new FormData(e.target),
                 eid = fd.get('editId'); const d = { id: eid || generateId('SV', 'services'), serviceName: fd.get('serviceName'), category: fd.get('category'), price: parseInt(fd.get('price')), duration: parseInt(fd.get('duration')) || 60, gstRate: parseInt(fd.get('gstRate')) || 18 }; if (eid) { const i = appData.services.findIndex(x => x.id === eid); if (i > -1) appData.services[i] = d; } else appData.services.push(d);
             save();
             closeModal('serviceModal');
             renderAll();
-            showToast('Service saved!'); });
+            showToast('Saved!'); });
         document.getElementById('inventoryForm').addEventListener('submit', function(e) { e.preventDefault();
             const fd = new FormData(e.target),
                 eid = fd.get('editId'),
@@ -664,27 +818,28 @@
             save();
             closeModal('inventoryModal');
             renderAll();
-            showToast('Product saved!'); });
+            showToast('Saved!'); });
         document.getElementById('marketingForm').addEventListener('submit', function(e) { e.preventDefault();
             const fd = new FormData(e.target),
                 eid = fd.get('editId'); const d = { id: eid || generateId('M', 'marketing'), campaignName: fd.get('campaignName'), campaignType: fd.get('campaignType'), couponCode: fd.get('couponCode') || '', discountValue: parseInt(fd.get('discountValue')) || 0 }; if (eid) { const i = appData.marketing.findIndex(x => x.id === eid); if (i > -1) appData.marketing[i] = d; } else appData.marketing.push(d);
             save();
             closeModal('marketingModal');
             renderAll();
-            showToast('Campaign saved!'); });
+            showToast('Saved!'); });
         document.getElementById('membershipForm').addEventListener('submit', function(e) { e.preventDefault();
             const fd = new FormData(e.target),
                 eid = fd.get('editId'); const d = { id: eid || generateId('MP', 'membership'), planName: fd.get('planName'), price: parseInt(fd.get('price')), discountPercentage: parseInt(fd.get('discountPercentage')) || 0, rewardPoints: 100 }; if (eid) { const i = appData.membership.findIndex(x => x.id === eid); if (i > -1) appData.membership[i] = d; } else appData.membership.push(d);
             save();
             closeModal('membershipModal');
             renderAll();
-            showToast('Plan saved!'); });
+            showToast('Saved!'); });
 
         // Charts
         let salesChart, reportCharts = {};
         function initSalesChart() { const c = document.getElementById('salesChart'); if (!c) return; if (salesChart) salesChart.destroy();
-            salesChart = new Chart(c, { type: 'line', data: { labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'], datasets: [{ label: '$', data: [1200, 1500, 1800, 1400, 2000, 2500, 2200], borderColor: '#c9956b', backgroundColor: 'rgba(201,149,107,0.1)', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: true } }); }
-        function updateReports() { const tr = appData.billing.reduce((s, b) => s + b.finalAmount, 0),
+            salesChart = new Chart(c, { type: 'line', data: { labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'], datasets: [{ label: '$', data: [1200, 1500, 1800, 1400, 2000, 2500, 2200], borderColor: '#c9956b', backgroundColor: 'rgba(201,149,107,0.1)', fill: true, tension: 0.4 }] }, options: { responsive: true } }); }
+        function updateReports() {
+            const tr = appData.billing.reduce((s, b) => s + b.finalAmount, 0),
                 tb = appData.appointments.length;
             document.getElementById('reportTotalRevenue').textContent = '$' + tr;
             document.getElementById('reportTotalBookings').textContent = tb;
@@ -693,24 +848,37 @@
             appData.appointments.forEach(a => { (a.services || []).forEach(s => { sc[s] = (sc[s] || 0) + 1; }); });
             const top = Object.entries(sc).sort((a, b) => b[1] - a[1])[0];
             document.getElementById('reportTopService').textContent = top ? top[0] : '-';
-            initReportCharts(); }
-        function initReportCharts() { Object.values(reportCharts).forEach(c => { if (c) c.destroy(); });
-            reportCharts = {}; const ctx1 = document.getElementById('revenueTrendChart'); if (ctx1) reportCharts.rt = new Chart(ctx1, { type: 'line', data: { labels: ['W1', 'W2', 'W3', 'W4'], datasets: [{ label: '$', data: [2800, 3200, 2900, 3540], borderColor: '#c9956b', backgroundColor: 'rgba(201,149,107,0.1)', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: true } }); const ctx2 = document.getElementById('bookingTrendChart'); if (ctx2) reportCharts.bt = new Chart(ctx2, { type: 'bar', data: { labels: ['W1', 'W2', 'W3', 'W4'], datasets: [{ label: 'Bookings', data: [42, 38, 45, 48], backgroundColor: '#5d9b6a' }] }, options: { responsive: true, maintainAspectRatio: true } }); const sc2 = {};
-            appData.appointments.forEach(a => { (a.services || []).forEach(s => { sc2[s] = (sc2[s] || 0) + 1; }); }); const ctx3 = document.getElementById('serviceDistChart'); if (ctx3) reportCharts.sd = new Chart(ctx3, { type: 'doughnut', data: { labels: Object.keys(sc2), datasets: [{ data: Object.values(sc2), backgroundColor: ['#c9956b', '#5d9b6a', '#6b8e9b', '#d4a24e', '#c4554d'] }] }, options: { responsive: true, maintainAspectRatio: true } }); }
+            const period = document.getElementById('reportPeriod')?.value || '30';
+            let labels = ['W1', 'W2', 'W3', 'W4'],
+                revData = [2800, 3200, 2900, 3540],
+                bookData = [42, 38, 45, 48];
+            if (period === 'weekly') { labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                revData = [400, 500, 450, 600, 550, 700, 650];
+                bookData = [6, 8, 7, 10, 9, 12, 11]; } else if (period === 'monthly') { labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                revData = [8500, 9200, 10100, 11500, 10800, 12450, 11000, 13000, 12500, 14000, 13500, 15000];
+                bookData = [120, 135, 150, 165, 155, 180, 160, 190, 175, 200, 185, 210]; } else if (period === 'yearly') { labels = ['2020', '2021', '2022', '2023', '2024'];
+                revData = [95000, 110000, 125000, 140000, 155000];
+                bookData = [1400, 1650, 1800, 2000, 2200]; }
+            initReportCharts(labels, revData, bookData);
+        }
+        function initReportCharts(labels, revData, bookData) { Object.values(reportCharts).forEach(c => { if (c) c.destroy(); });
+            reportCharts = {}; const ctx1 = document.getElementById('revenueTrendChart'); if (ctx1) reportCharts.rt = new Chart(ctx1, { type: 'line', data: { labels, datasets: [{ label: '$', data: revData, borderColor: '#c9956b', backgroundColor: 'rgba(201,149,107,0.1)', fill: true, tension: 0.4 }] }, options: { responsive: true } }); const ctx2 = document.getElementById('bookingTrendChart'); if (ctx2) reportCharts.bt = new Chart(ctx2, { type: 'bar', data: { labels, datasets: [{ label: 'Bookings', data: bookData, backgroundColor: '#5d9b6a' }] }, options: { responsive: true } }); const sc2 = {};
+            appData.appointments.forEach(a => { (a.services || []).forEach(s => { sc2[s] = (sc2[s] || 0) + 1; }); }); const ctx3 = document.getElementById('serviceDistChart'); if (ctx3) reportCharts.sd = new Chart(ctx3, { type: 'doughnut', data: { labels: Object.keys(sc2), datasets: [{ data: Object.values(sc2), backgroundColor: ['#c9956b', '#5d9b6a', '#6b8e9b', '#d4a24e', '#c4554d'] }] }, options: { responsive: true } }); }
         function exportReport(type) { const blob = new Blob([JSON.stringify({ type, data: appData }, null, 2)], { type: 'application/json' }); const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = `report_${type}.json`;
             a.click();
             showToast('Exported!'); }
 
+        // Settings
         function initBusinessHours() { const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
             document.getElementById('businessHoursContainer').innerHTML = days.map((d, i) => `<div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;"><span style="width:35px;font-weight:600;font-size:0.78rem;">${d}</span><select class="form-control" style="flex:1;padding:8px;"><option ${i<6?'selected':''}>Open</option><option ${i>=6?'selected':''}>Closed</option></select><input class="form-control" type="time" value="09:00" style="flex:1;padding:8px;" ${i>=6?'disabled':''}><input class="form-control" type="time" value="${i<5?'20:00':'18:00'}" style="flex:1;padding:8px;" ${i>=6?'disabled':''}></div>`).join(''); }
         document.getElementById('businessHoursForm')?.addEventListener('submit', function(e) { e.preventDefault();
-            showToast('Business hours saved!'); });
+            showToast('Saved!'); });
         function selectColor(c, el) { document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected')); if (el) el.classList.add('selected');
             document.documentElement.style.setProperty('--primary', c);
             document.documentElement.style.setProperty('--primary-dark', c + 'cc');
-            showToast('Color applied!'); }
+            showToast('Applied!'); }
         function changeTheme(m) { if (m === 'dark') document.body.classList.add('dark-mode');
             else document.body.classList.remove('dark-mode');
             localStorage.setItem('salon_theme', m); }
@@ -720,12 +888,12 @@
             a.click();
             showToast('Exported!'); }
         function importData(e) { const f = e.target.files[0]; if (f) { const r = new FileReader();
-                r.onload = function(ev) { try { const d = JSON.parse(ev.target.result); if (confirm('Import data? This will replace all current data.')) { appData = d;
+                r.onload = function(ev) { try { const d = JSON.parse(ev.target.result); if (confirm('Import?')) { appData = d;
                             save();
                             renderAll();
-                            showToast('Imported!'); } } catch (er) { showToast('Invalid file!', 'error'); } };
+                            showToast('Imported!'); } } catch (er) { showToast('Invalid!', 'error'); } };
                 r.readAsText(f); } }
-        function resetData() { if (confirm('Reset all data to default?')) { appData = JSON.parse(JSON.stringify(defaultData));
+        function resetData() { if (confirm('Reset?')) { appData = JSON.parse(JSON.stringify(defaultData));
             save();
             renderAll();
             showToast('Reset!'); } }
@@ -733,10 +901,10 @@
                 m.innerHTML += `<div style="background:var(--primary);color:white;padding:10px 12px;border-radius:14px;margin:4px 0;max-width:80%;margin-left:auto;"><strong>You</strong><p>${i.value}</p></div>`;
                 i.value = '';
                 m.scrollTop = m.scrollHeight;
-                setTimeout(() => { m.innerHTML += `<div style="background:var(--accent);padding:10px 12px;border-radius:14px;margin:4px 0;max-width:80%;"><strong>Support</strong><p>Thanks for your message! We'll get back to you soon.</p></div>`;
+                setTimeout(() => { m.innerHTML += `<div style="background:var(--accent);padding:10px 12px;border-radius:14px;margin:4px 0;max-width:80%;"><strong>Support</strong><p>Thanks!</p></div>`;
                     m.scrollTop = m.scrollHeight; }, 800); } }
 
-        // Event listeners
+        // Events
         document.getElementById('menuToggle').addEventListener('click', () => { document.getElementById('sidebar').classList.add('mobile-open');
             document.getElementById('sidebarOverlay').classList.add('active'); });
         document.getElementById('sidebarOverlay').addEventListener('click', () => { document.getElementById('sidebar').classList.remove('mobile-open');
@@ -755,10 +923,9 @@
                 document.getElementById('tab-' + e.target.dataset.tab).classList.add('active'); if (e.target.dataset.tab === 'business') initBusinessHours(); } });
         if (localStorage.getItem('salon_theme') === 'dark') { document.body.classList.add('dark-mode');
             document.querySelector('#themeToggle i').className = 'fas fa-sun'; }
-
         document.addEventListener('DOMContentLoaded', () => { renderAll();
             initSalesChart();
-            console.log('✅ SalonPro CRM Ready - Perfect Mobile Modals!'); });
+            console.log('✅ SalonPro CRM - Complete with Global Search & Module Filters!'); });
     </script>
 </body>
 </html>
